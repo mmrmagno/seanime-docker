@@ -1,0 +1,17 @@
+services:
+  seanime:
+    build: .                       # Build from the local Dockerfile
+    container_name: seanime
+    restart: unless-stopped
+    volumes:
+      - ./config/seanime:/home/seanime/.config/Seanime
+      - ./config/qbittorrent:/home/seanime/.config/qBittorrent
+      - ./downloads:/home/seanime/Downloads
+      - ./anime:/home/seanime/anime
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+

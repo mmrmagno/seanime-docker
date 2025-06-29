@@ -1,0 +1,19 @@
+# Ignore Docker volumes and caches
+config/
+downloads/
+anime/
+
+# Ignore IDE/editor artifacts
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+*~
+
+# System stuff
+.DS_Store
+Thumbs.db
+
+# Secrets (just in case)
+.env
