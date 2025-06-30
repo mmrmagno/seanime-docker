@@ -60,14 +60,12 @@ jobs:
             ghcr.io/mmrmagno/seanime:${{ steps.date.outputs.date }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            BUILD_DATE=${{ steps.date.outputs.date }}
-            VERSION=${{ github.sha }}
 
-      - name: Sync README to DockerHub
-        uses: ms-jpq/sync-dockerhub-readme@v1
+      - name: Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: mmr757/seanime
-          readme: ./README.md
+          short-description: "Docker Alpine Seanime"
+          readme-filepath: ./README.md
