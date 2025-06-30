@@ -7,6 +7,7 @@ on:
       - 'Dockerfile'
       - 'config/**'
       - '.github/workflows/**'
+      - 'README.md'
   workflow_dispatch:
 
 env:
@@ -47,7 +48,7 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
 
-      - name: Build and push
+      - name: Build and push Docker images
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -64,14 +65,6 @@ jobs:
             BUILD_DATE=${{ steps.date.outputs.date }}
             VERSION=${{ github.sha }}
 
-      - name: Sync README to DockerHub
-        uses: ms-jpq/sync-dockerhub-readme@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: mmr757/seanime
-          readme: "./README.md"
-
       - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
@@ -80,4 +73,3 @@ jobs:
           repository: mmr757/seanime
           short-description: "Docker Alpine Seanime"
           readme-filepath: ./README.md
-
