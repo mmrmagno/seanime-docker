@@ -66,11 +66,10 @@ jobs:
             VERSION=${{ github.sha }}
 
       - name: Sync README to DockerHub
-        uses: meeDamian/sync-readme@v1.0.6
+        uses: peter-evans/dockerhub-description@v4
         with:
-          user: ${{ secrets.DOCKERHUB_USERNAME }}
-          pass: ${{ secrets.DOCKERHUB_TOKEN }}
-          slug: mmr757/seanime
-          readme: ./README.md
-          description: true
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: mmr757/seanime
+          readme-filepath: ./README.md
 

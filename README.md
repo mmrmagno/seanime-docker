@@ -16,7 +16,7 @@ A lightweight, all-in-one Docker image for the latest [Seanime](https://seanime.
 ➡️ [View on Docker Hub](https://hub.docker.com/r/mmr757/seanime)
 
 ```bash
-docker pull yourdockerhubusername/seanime:latest
+docker pull mmr757/seanime:latest
 ```
 
 ---
