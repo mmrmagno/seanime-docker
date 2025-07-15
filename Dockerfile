@@ -30,7 +30,10 @@ RUN set -eux; \
     rm "${FILENAME}"; \
     chmod +x seanime
 
-# Create directories and generate qBittorrent config with password
+# Copy custom qBittorrent config
+COPY qbittorrent.conf /tmp/qbittorrent.conf
+
+# Create directories and generate qBittorrent config
 RUN mkdir -p /home/seanime/.config/qBittorrent/qBittorrent/config && \
     mkdir -p /home/seanime/.config/Seanime && \
     mkdir -p /home/seanime/Downloads && \
@@ -38,8 +41,7 @@ RUN mkdir -p /home/seanime/.config/qBittorrent/qBittorrent/config && \
     qbittorrent-nox --webui-port=8080 --profile=/home/seanime/.config/qBittorrent & \
     sleep 3 && \
     pkill qbittorrent-nox && \
-    echo 'WebUI\\Password_PBKDF2=@ByteArray(ARQ77eY1NUZaQsuDHbIMCA==:0WMRkYTUWVT9wVvdDtHAjU9b3b7uB8NR1Gur2hmQCvCDpm39Q+PsJRJPaCU51dEiz+dTzh8qbPsL8WkFljQYFQ==)' \
-    >> /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf
+    cat /tmp/qbittorrent.conf >> /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf
 
 # Define volumes for persistent data
 VOLUME ["/home/seanime/.config", "/home/seanime/Downloads", "/home/seanime/anime"]
@@ -47,5 +49,18 @@ VOLUME ["/home/seanime/.config", "/home/seanime/Downloads", "/home/seanime/anime
 # Declare ports (internal only)
 EXPOSE 43211 8080 43213 43214 6881 6881/udp 10000
 
-# Run both qBittorrent and Seanime
-CMD ["bash", "-c", "qbittorrent-nox --webui-port=8080 --profile=/home/seanime/.config/qBittorrent --daemon && ./seanime --datadir /home/seanime/.config/Seanime"]
+# Create startup script to fix host binding
+RUN echo '#!/bin/bash' > /app/start.sh && \
+    echo 'qbittorrent-nox --webui-port=8080 --profile=/home/seanime/.config/qBittorrent --daemon' >> /app/start.sh && \
+    echo './seanime --datadir /home/seanime/.config/Seanime &' >> /app/start.sh && \
+    echo 'sleep 2' >> /app/start.sh && \
+    echo 'if [ -f /home/seanime/.config/Seanime/config.toml ]; then' >> /app/start.sh && \
+    echo '  sed -i "s/host = '\''127.0.0.1'\''/host = '\''0.0.0.0'\''/" /home/seanime/.config/Seanime/config.toml' >> /app/start.sh && \
+    echo '  pkill seanime' >> /app/start.sh && \
+    echo '  sleep 1' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
+    echo './seanime --datadir /home/seanime/.config/Seanime' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+# Run startup script
+CMD ["/app/start.sh"]
