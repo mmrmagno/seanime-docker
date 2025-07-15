@@ -66,7 +66,9 @@ RUN echo '#!/bin/bash' > /app/start.sh && \
     echo 'sleep 3' >> /app/start.sh && \
     echo 'pkill qbittorrent-nox' >> /app/start.sh && \
     echo 'sleep 1' >> /app/start.sh && \
-    echo 'cat /tmp/qbittorrent.conf > /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf' >> /app/start.sh && \
+    echo 'if [ ! -f /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf ] || ! grep -q "Password_PBKDF2" /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf; then' >> /app/start.sh && \
+    echo '  cat /tmp/qbittorrent.conf > /home/seanime/.config/qBittorrent/qBittorrent/config/qBittorrent.conf' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
     echo 'qbittorrent-nox --webui-port=8080 --profile=/home/seanime/.config/qBittorrent --daemon' >> /app/start.sh && \
     echo '/app/monitor-config.sh &' >> /app/start.sh && \
     echo './seanime --datadir /home/seanime/.config/Seanime &' >> /app/start.sh && \
