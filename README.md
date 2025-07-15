@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/logo.svg" alt="Seanime Logo" width="128" height="128">
+</div>
+
 # 🌊 Seanime Docker Image
 
 A lightweight, all-in-one Docker image for the latest [Seanime](https://seanime.rahim.app/) anime streaming app — bundled with `qBittorrent-nox` and ready to use out of the box.
